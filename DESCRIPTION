@@ -1,7 +1,7 @@
 Package: messydates
 Title: A Flexible Class for Messy Dates
 Description: Contains a set of tools for constructing and coercing
-  into and from the messydt class. 
+  into and from the mdate class. 
   This date class implements ISO 8601-2:2019(E) and
   allows regular dates to be annotated 
   to express unspecified date components,
@@ -9,7 +9,8 @@ Description: Contains a set of tools for constructing and coercing
   date ranges, and sets of dates. 
   This is useful for describing and analysing temporal information,
   whether historical or recent, where date precision may vary.
-Version: 0.2.1
+Version: 0.3.0
+Date: 2022-05-30
 Authors@R: 
     c(person(given = "James",
              family = "Hollway",
@@ -26,19 +27,19 @@ Authors@R:
              comment = c("IHEID", ORCID = "0000-0002-6234-9764")))
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 LazyData: true
 VignetteBuilder: knitr
-Imports: stringr, purrr, lubridate, tibble, dplyr
+Imports: stringr, purrr, lubridate, tibble, dplyr, skimr
 Suggests: testthat (>= 3.0.0), covr, rmarkdown, knitr
 Config/testthat/edition: 3
-Depends: R (>= 2.10)
+Depends: R (>= 3.4)
 NeedsCompilation: no
-Packaged: 2022-02-23 20:54:59 UTC; hollway
+Packaged: 2022-05-31 22:16:45 UTC; hollway
 Author: James Hollway [cre, aut, ctb] (IHEID,
     <https://orcid.org/0000-0002-8361-9647>),
   Henrique Sposito [ctb] (IHEID, <https://orcid.org/0000-0003-3420-6085>),
   Jael Tan [ctb] (IHEID, <https://orcid.org/0000-0002-6234-9764>)
 Maintainer: James Hollway <james.hollway@graduateinstitute.ch>
 Repository: CRAN
-Date/Publication: 2022-02-23 21:20:02 UTC
+Date/Publication: 2022-06-02 11:30:03 UTC
