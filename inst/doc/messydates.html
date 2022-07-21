@@ -12,7 +12,7 @@
 
 <meta name="author" content="Henrique Sposito" />
 
-<meta name="date" content="2022-06-01" />
+<meta name="date" content="2022-07-21" />
 
 <title>Working with messy dates</title>
 
@@ -334,7 +334,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Working with messy dates</h1>
 <h4 class="author">Henrique Sposito</h4>
-<h4 class="date">2022-06-01</h4>
+<h4 class="date">2022-07-21</h4>
 
 
 
@@ -357,8 +357,8 @@ sets of dates.</p>
 <h1>Working with messydates: 2001 Battles</h1>
 <p>Take, for example, the names and dates of battles in 2001 according
 to <a href="https://en.wikipedia.org/wiki/List_of_battles_in_the_21st_century">Wikipedia</a>.
-The dates of these battles are often uncertain with different levels of
-date precision being reported.</p>
+The dates of these battles are often uncertain or approximate with
+different levels of date precision being reported.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>battles <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(<span class="sc">~</span>Battle, <span class="sc">~</span>Date,</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;Operation MH-2&quot;</span>, <span class="st">&quot;2001 March 8&quot;</span>,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;2001 Bangladesh–India border clashes&quot;</span>, <span class="st">&quot;2001-04-16..2001-04-20&quot;</span>,</span>
@@ -461,10 +461,10 @@ a <code>~</code> to year, month, or day components, or whole dates to
 estimate values that are possibly correct. Day, month, or year,
 uncertainty can also be indicated by adding a <code>?</code> to a
 possibly dubious date or date component. If we are not sure about the
-reliability of the sources for the “Battle of Shawali Kowt” and that we
-think the date for the “Battle of Sayyd Alma Kalay” is approximate, we
-can use <code>as_uncertain()</code> or <code>as_approximate()</code> to
-annotate these dates.</p>
+reliability of the sources for the “Battle of Shawali Kowt” and we think
+the declared date for the battle is approximate, we can use
+<code>as_uncertain()</code> or <code>as_approximate()</code> to annotate
+these dates.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(<span class="fu">ifelse</span>(battles<span class="sc">$</span>Battle <span class="sc">==</span> <span class="st">&quot;Battle of Shawali Kowt&quot;</span>, <span class="fu">as_uncertain</span>(battles<span class="sc">$</span>Date), battles<span class="sc">$</span>Date))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(<span class="fu">ifelse</span>(battles<span class="sc">$</span>Battle <span class="sc">==</span> <span class="st">&quot;Battle of Sayyd Alma Kalay&quot;</span>, <span class="fu">as_approximate</span>(battles<span class="sc">$</span>Date), battles<span class="sc">$</span>Date))</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(battles)</span></code></pre></div>
@@ -501,7 +501,6 @@ of dates. As these dates may refer to several possible dates, the
 function “opens” these values to include all the possible dates implied.
 Let’s expand the dates in the Battles dataset.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">expand</span>(battles<span class="sc">$</span>Date)</span></code></pre></div>
-<pre><code>## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded</code></pre>
 <pre><code>## [[1]]
 ## [1] &quot;2001-03-08&quot;
 ## 
@@ -594,7 +593,7 @@ Let’s expand the dates in the Battles dataset.</p>
 <p>Note that to expand approximate dates one needs to declare the range
 to expand approximate dates using the ‘approx_range’ argument in
 <code>expand()</code></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">expand</span>(battles<span class="sc">$</span>Date, <span class="at">approx_range =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">expand</span>(battles<span class="sc">$</span>Date, <span class="at">approx_range =</span> <span class="dv">1</span>)</span></code></pre></div>
 </div>
 <div id="contract" class="section level2">
 <h2>Contract</h2>
@@ -603,8 +602,7 @@ to expand approximate dates using the ‘approx_range’ argument in
 annotation of messydates, picking the most succinct representation of
 dates possible. We can contract back the dates in the Battles data
 previously expanded.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">contract =</span> <span class="fu">contract</span>(<span class="fu">expand</span>(battles<span class="sc">$</span>Date)))</span></code></pre></div>
-<pre><code>## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">contract =</span> <span class="fu">contract</span>(<span class="fu">expand</span>(battles<span class="sc">$</span>Date)))</span></code></pre></div>
 <pre><code>## # A tibble: 20 × 1
 ##    contract              
 ##    &lt;mdate&gt;               
@@ -643,41 +641,35 @@ ranges of dates (<code>min</code>), the latest possible date
 a <code>random</code> selection from among the candidate dates. These
 functions are particularly useful for use with existing methods and
 models, especially for checking the robustness of results.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">min =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, min),</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">max =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, max),</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">median =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, median),</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">mean =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, mean),</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">modal =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, modal),</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">random =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, random))</span></code></pre></div>
-<pre><code>## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded
-## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded
-## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded
-## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded
-## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded
-## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">min =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, min),</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">max =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, max),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">median =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, median),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">mean =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, mean),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">modal =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, modal),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">random =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, random))</span></code></pre></div>
 <pre><code>## # A tibble: 20 × 6
 ##    min        max        median     mean       modal      random    
 ##    &lt;date&gt;     &lt;date&gt;     &lt;date&gt;     &lt;date&gt;     &lt;date&gt;     &lt;date&gt;    
 ##  1 2001-03-08 2001-03-08 2001-03-08 2001-03-08 2001-03-08 2001-03-08
-##  2 2001-04-16 2001-04-20 2001-04-18 2001-04-18 2001-04-16 2001-04-19
+##  2 2001-04-16 2001-04-20 2001-04-18 2001-04-18 2001-04-16 2001-04-17
 ##  3 2001-05-25 2001-05-25 2001-05-25 2001-05-25 2001-05-25 2001-05-25
-##  4 2001-06-22 2001-06-28 2001-06-25 2001-06-25 2001-06-22 2001-06-22
+##  4 2001-06-22 2001-06-28 2001-06-25 2001-06-25 2001-06-22 2001-06-24
 ##  5 2001-08-13 2001-08-26 2001-08-20 2001-08-19 2001-08-13 2001-08-14
-##  6 2001-10-07 2001-12-31 2001-11-19 2001-11-18 2001-10-07 2001-10-10
+##  6 2001-10-07 2001-12-31 2001-11-19 2001-11-18 2001-10-07 2001-10-26
 ##  7 2001-10-19 2001-10-20 2001-10-20 2001-10-19 2001-10-19 2001-10-19
 ##  8 2001-11-09 2001-11-09 2001-11-09 2001-11-09 2001-11-09 2001-11-09
-##  9 2001-11-11 2001-11-23 2001-11-17 2001-11-17 2001-11-11 2001-11-17
+##  9 2001-11-11 2001-11-23 2001-11-17 2001-11-17 2001-11-11 2001-11-12
 ## 10 2021-11-12 2021-11-12 2021-11-12 2021-11-12 2021-11-12 2021-11-12
-## 11 2001-11-13 2001-11-14 2001-11-14 2001-11-13 2001-11-13 2001-11-14
+## 11 2001-11-13 2001-11-14 2001-11-14 2001-11-13 2001-11-13 2001-11-13
 ## 12 2001-11-13 2001-11-14 2001-11-14 2001-11-13 2001-11-13 2001-11-14
-## 13 2001-11-15 2001-11-30 2001-11-23 2001-11-22 2001-11-15 2001-11-29
-## 14 2001-11-22 2001-12-07 2001-11-30 2001-11-29 2001-11-22 2001-11-28
+## 13 2001-11-15 2001-11-30 2001-11-23 2001-11-22 2001-11-15 2001-11-24
+## 14 2001-11-22 2001-12-07 2001-11-30 2001-11-29 2001-11-22 2001-12-01
 ## 15 2001-11-25 2001-12-01 2001-11-28 2001-11-28 2001-11-25 2001-11-30
-## 16 2001-12-12 2001-12-17 2001-12-15 2001-12-14 2001-12-12 2001-12-15
+## 16 2001-12-12 2001-12-17 2001-12-15 2001-12-14 2001-12-12 2001-12-13
 ## 17 2001-12-03 2001-12-03 2001-12-03 2001-12-03 2001-12-03 2001-12-03
 ## 18 2001-12-04 2001-12-04 2001-12-04 2001-12-04 2001-12-04 2001-12-04
 ## 19 2001-12-22 2001-12-22 2001-12-22 2001-12-22 2001-12-22 2001-12-22
-## 20 2001-12-30 2002-01-03 2002-01-01 2002-01-01 2001-12-30 2002-01-03</code></pre>
+## 20 2001-12-30 2002-01-03 2002-01-01 2002-01-01 2001-12-30 2002-01-01</code></pre>
 </div>
 <div id="additional-functionality" class="section level2">
 <h2>Additional functionality</h2>
@@ -690,40 +682,29 @@ whether there is any intersection between two messy dates.
 found within a messy date range or set. <code>is_similar()</code> tests
 whether two dates contain similar components. <code>is_precise()</code>
 tests whether certain date is precise.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_messydate</span>(battles<span class="sc">$</span>Date)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_messydate</span>(battles<span class="sc">$</span>Date)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_intersecting</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">1</span>]), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
-<pre><code>## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded
-## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_intersecting</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">1</span>]), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
 <pre><code>## [1] FALSE</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_element</span>(<span class="fu">as_messydate</span>(<span class="st">&quot;2001-04-17&quot;</span>), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
-<pre><code>## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_element</span>(<span class="fu">as_messydate</span>(<span class="st">&quot;2001-04-17&quot;</span>), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_similar</span>(<span class="fu">as_messydate</span>(<span class="st">&quot;2001-08-03&quot;</span>), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">1</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_similar</span>(<span class="fu">as_messydate</span>(<span class="st">&quot;2001-08-03&quot;</span>), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">1</span>]))</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_precise</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_precise</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
 <pre><code>## [1] FALSE</code></pre>
 <p>Additionally, one can perform intersection, union, or ‘join’ of
 messydates.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md_intersect</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">9</span>]), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">10</span>]))</span></code></pre></div>
-<pre><code>## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded
-## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md_intersect</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">9</span>]), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">10</span>]))</span></code></pre></div>
 <pre><code>## character(0)</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md_union</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">17</span>]), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">18</span>]))</span></code></pre></div>
-<pre><code>## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded
-## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md_union</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">17</span>]), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">18</span>]))</span></code></pre></div>
 <pre><code>## [1] &quot;2001-12-03&quot; &quot;2001-12-04&quot;</code></pre>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md_multiset</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">1</span>]), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
-<pre><code>## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded
-## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md_multiset</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">1</span>]), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
 <pre><code>## [1] &quot;2001-03-08&quot; &quot;2001-04-16&quot; &quot;2001-04-17&quot; &quot;2001-04-18&quot; &quot;2001-04-19&quot;
 ## [6] &quot;2001-04-20&quot;</code></pre>
 <p>As well, we can do some arithmetic operations in the
 <code>mdate</code> variable.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="st">&quot;one day more&quot;</span> <span class="ot">=</span> battles<span class="sc">$</span>Date <span class="sc">+</span> <span class="dv">1</span>,</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;one day less&quot;</span> <span class="ot">=</span> battles<span class="sc">$</span>Date <span class="sc">-</span> <span class="st">&quot;1 day&quot;</span>)</span></code></pre></div>
-<pre><code>## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded
-## Please specify &#39;approx_range&#39; argument if you want approximate dates to also be expanded</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="st">&quot;one day more&quot;</span> <span class="ot">=</span> battles<span class="sc">$</span>Date <span class="sc">+</span> <span class="dv">1</span>,</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;one day less&quot;</span> <span class="ot">=</span> battles<span class="sc">$</span>Date <span class="sc">-</span> <span class="st">&quot;1 day&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 20 × 2
 ##    `one day more`         `one day less`        
 ##    &lt;mdate&gt;                &lt;mdate&gt;               
