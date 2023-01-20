@@ -12,7 +12,7 @@
 
 <meta name="author" content="Henrique Sposito" />
 
-<meta name="date" content="2022-12-15" />
+<meta name="date" content="2023-01-20" />
 
 <title>Working with messy dates</title>
 
@@ -333,7 +333,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Working with messy dates</h1>
 <h4 class="author">Henrique Sposito</h4>
-<h4 class="date">2022-12-15</h4>
+<h4 class="date">2023-01-20</h4>
 
 
 
@@ -361,29 +361,30 @@ approximate with different levels of date precision being reported.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(messydates)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>battles <span class="ot">&lt;-</span> messydates<span class="sc">::</span>battles</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>battles</span></code></pre></div>
-<pre><code>## # A tibble: 20 × 3
-##    Battle                               Date                     Parties        
-##    &lt;chr&gt;                                &lt;mdate&gt;                  &lt;chr&gt;          
-##  1 Operation MH-2                       2001-03-08               MK-National Li…
-##  2 2001 Bangladesh–India border clashes 2001-04-16..2001-04-20   BD-ID          
-##  3 Operation Vaksince                   2001-05-25               MK-National Li…
-##  4 Alkhan-Kala operation                2001-06-22..2001-06-28   RU-Chechen Rep…
-##  5 Battle of Vedeno                     2001-08-13..2001-08-26   RU-Chechen Ins…
-##  6 Operation Crescent Wind              2001-10-7..2001-12?      US/UK-Taliban  
-##  7 Operation Rhino                      2001-10-19..2001-10-20   US-Taliban     
-##  8 Battle of Mazar-e-Sharif             2001-11-09               US/Northern Al…
-##  9 Siege of Kunduz                      2001-11-11..2001-11-23   US/Northern Al…
-## 10 Battle of Herat                      2001-11-12               US/Northern Al…
-## 11 Battle of Kabul                      2001-11-13..2001-11-14   US/Northern Al…
-## 12 Battle of Tarin Kowt                 2001-11-13..2001-11-14   US/Eastern All…
-## 13 Operation Trent                      2001-11-~15..2001-11-~30 US/UK-Taliban/…
-## 14 Battle of Kandahar                   2001-11-22..2001-12-07   US/AU/Eastern …
-## 15 Battle of Qala-i-Jangi               2001-11-25..2001-12-01   US/UK/Northern…
-## 16 Battle of Tora Bora                  2001-12-12..2001-12-17   US/Northern Al…
-## 17 Battle of Shawali Kowt               2001-12-03               US/Eastern All…
-## 18 Battle of Sayyd Alma Kalay           2001-12-04               US/Eastern All…
-## 19 Battle of Amami-Oshima               2001-12-22               JP-KP          
-## 20 Tsotsin-Yurt operation               2001-12-30..2002-01-03   RU-Chechen Ins…</code></pre>
+<pre><code>## # A tibble: 20 × 5
+##    Battle                               Date             Parties US_pa…¹ N_act…²
+##    &lt;chr&gt;                                &lt;mdate&gt;          &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Operation MH-2                       2001-03-08     … MK-Nat…       0       2
+##  2 2001 Bangladesh–India border clashes 2001-04-16..200… BD-ID         0       2
+##  3 Operation Vaksince                   2001-05-25     … MK-Nat…       0       2
+##  4 Alkhan-Kala operation                2001-06-22..200… RU-Che…       0       2
+##  5 Battle of Vedeno                     2001-08-13..200… RU-Che…       0       2
+##  6 Operation Crescent Wind              2001-10-07..200… US/UK-…       1       3
+##  7 Operation Rhino                      2001-10-19..200… US-Tal…       1       2
+##  8 Battle of Mazar-e-Sharif             2001-11-09     … US/Nor…       1       4
+##  9 Siege of Kunduz                      2001-11-11..200… US/Nor…       1       4
+## 10 Battle of Herat                      2001-11-12     … US/Nor…       1       4
+## 11 Battle of Kabul                      2001-11-13..200… US/Nor…       1       3
+## 12 Battle of Tarin Kowt                 2001-11-13..200… US/Eas…       1       3
+## 13 Operation Trent                      2001-11-~15..20… US/UK-…       1       4
+## 14 Battle of Kandahar                   2001-11-22..200… US/AU/…       1       4
+## 15 Battle of Qala-i-Jangi               2001-11-25..200… US/UK/…       1       5
+## 16 Battle of Tora Bora                  2001-12-12..200… US/Nor…       1       4
+## 17 Battle of Shawali Kowt               2001-12-03     … US/Eas…       1       3
+## 18 Battle of Sayyd Alma Kalay           2001-12-04     … US/Eas…       1       3
+## 19 Battle of Amami-Oshima               2001-12-22     … JP-KP         0       2
+## 20 Tsotsin-Yurt operation               2001-12-30..200… RU-Che…       0       2
+## # … with abbreviated variable names ¹​US_party, ²​N_actors</code></pre>
 <div id="coerce-to-messydates" class="section level2">
 <h2>Coerce to messydates</h2>
 <p>Previously researchers had to remove all types of imprecision from
@@ -414,29 +415,30 @@ in the same day it began we use <code>on_or_before()</code> and
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(<span class="fu">ifelse</span>(battles<span class="sc">$</span>Battle <span class="sc">==</span> <span class="st">&quot;Battle of Herat&quot;</span>, <span class="fu">on_or_before</span>(battles<span class="sc">$</span>Date), battles<span class="sc">$</span>Date))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(<span class="fu">ifelse</span>(battles<span class="sc">$</span>Battle <span class="sc">==</span> <span class="st">&quot;Operation Vaksince&quot;</span>, <span class="fu">on_or_after</span>(battles<span class="sc">$</span>Date), battles<span class="sc">$</span>Date))</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(battles)</span></code></pre></div>
-<pre><code>## # A tibble: 20 × 3
-##    Battle                               Date                     Parties        
-##    &lt;chr&gt;                                &lt;mdate&gt;                  &lt;chr&gt;          
-##  1 Operation MH-2                       2001-03-08               MK-National Li…
-##  2 2001 Bangladesh–India border clashes 2001-04-16..2001-04-20   BD-ID          
-##  3 Operation Vaksince                   2001-05-25..             MK-National Li…
-##  4 Alkhan-Kala operation                2001-06-22..2001-06-28   RU-Chechen Rep…
-##  5 Battle of Vedeno                     2001-08-13..2001-08-26   RU-Chechen Ins…
-##  6 Operation Crescent Wind              2001-10-7..2001-12?      US/UK-Taliban  
-##  7 Operation Rhino                      2001-10-19..2001-10-20   US-Taliban     
-##  8 Battle of Mazar-e-Sharif             2001-11-09               US/Northern Al…
-##  9 Siege of Kunduz                      2001-11-11..2001-11-23   US/Northern Al…
-## 10 Battle of Herat                      ..2001-11-12             US/Northern Al…
-## 11 Battle of Kabul                      2001-11-13..2001-11-14   US/Northern Al…
-## 12 Battle of Tarin Kowt                 2001-11-13..2001-11-14   US/Eastern All…
-## 13 Operation Trent                      2001-11-~15..2001-11-~30 US/UK-Taliban/…
-## 14 Battle of Kandahar                   2001-11-22..2001-12-07   US/AU/Eastern …
-## 15 Battle of Qala-i-Jangi               2001-11-25..2001-12-01   US/UK/Northern…
-## 16 Battle of Tora Bora                  2001-12-12..2001-12-17   US/Northern Al…
-## 17 Battle of Shawali Kowt               2001-12-03               US/Eastern All…
-## 18 Battle of Sayyd Alma Kalay           2001-12-04               US/Eastern All…
-## 19 Battle of Amami-Oshima               2001-12-22               JP-KP          
-## 20 Tsotsin-Yurt operation               2001-12-30..2002-01-03   RU-Chechen Ins…</code></pre>
+<pre><code>## # A tibble: 20 × 5
+##    Battle                               Date             Parties US_pa…¹ N_act…²
+##    &lt;chr&gt;                                &lt;mdate&gt;          &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Operation MH-2                       2001-03-08     … MK-Nat…       0       2
+##  2 2001 Bangladesh–India border clashes 2001-04-16..200… BD-ID         0       2
+##  3 Operation Vaksince                   2001-05-25..   … MK-Nat…       0       2
+##  4 Alkhan-Kala operation                2001-06-22..200… RU-Che…       0       2
+##  5 Battle of Vedeno                     2001-08-13..200… RU-Che…       0       2
+##  6 Operation Crescent Wind              2001-10-07..200… US/UK-…       1       3
+##  7 Operation Rhino                      2001-10-19..200… US-Tal…       1       2
+##  8 Battle of Mazar-e-Sharif             2001-11-09     … US/Nor…       1       4
+##  9 Siege of Kunduz                      2001-11-11..200… US/Nor…       1       4
+## 10 Battle of Herat                      ..2001-11-12   … US/Nor…       1       4
+## 11 Battle of Kabul                      2001-11-13..200… US/Nor…       1       3
+## 12 Battle of Tarin Kowt                 2001-11-13..200… US/Eas…       1       3
+## 13 Operation Trent                      2001-11-~15..20… US/UK-…       1       4
+## 14 Battle of Kandahar                   2001-11-22..200… US/AU/…       1       4
+## 15 Battle of Qala-i-Jangi               2001-11-25..200… US/UK/…       1       5
+## 16 Battle of Tora Bora                  2001-12-12..200… US/Nor…       1       4
+## 17 Battle of Shawali Kowt               2001-12-03     … US/Eas…       1       3
+## 18 Battle of Sayyd Alma Kalay           2001-12-04     … US/Eas…       1       3
+## 19 Battle of Amami-Oshima               2001-12-22     … JP-KP         0       2
+## 20 Tsotsin-Yurt operation               2001-12-30..200… RU-Che…       0       2
+## # … with abbreviated variable names ¹​US_party, ²​N_actors</code></pre>
 <p>Additional annotations for approximate dates, are indicated by adding
 a <code>~</code> to year, month, or day components, or whole dates to
 estimate values that are possibly correct. Day, month, or year,
@@ -449,29 +451,30 @@ these dates.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(<span class="fu">ifelse</span>(battles<span class="sc">$</span>Battle <span class="sc">==</span> <span class="st">&quot;Battle of Shawali Kowt&quot;</span>, <span class="fu">as_uncertain</span>(battles<span class="sc">$</span>Date), battles<span class="sc">$</span>Date))</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(<span class="fu">ifelse</span>(battles<span class="sc">$</span>Battle <span class="sc">==</span> <span class="st">&quot;Battle of Sayyd Alma Kalay&quot;</span>, <span class="fu">as_approximate</span>(battles<span class="sc">$</span>Date), battles<span class="sc">$</span>Date))</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(battles)</span></code></pre></div>
-<pre><code>## # A tibble: 20 × 3
-##    Battle                               Date                     Parties        
-##    &lt;chr&gt;                                &lt;mdate&gt;                  &lt;chr&gt;          
-##  1 Operation MH-2                       2001-03-08               MK-National Li…
-##  2 2001 Bangladesh–India border clashes 2001-04-16..2001-04-20   BD-ID          
-##  3 Operation Vaksince                   2001-05-25..             MK-National Li…
-##  4 Alkhan-Kala operation                2001-06-22..2001-06-28   RU-Chechen Rep…
-##  5 Battle of Vedeno                     2001-08-13..2001-08-26   RU-Chechen Ins…
-##  6 Operation Crescent Wind              2001-10-7..2001-12?      US/UK-Taliban  
-##  7 Operation Rhino                      2001-10-19..2001-10-20   US-Taliban     
-##  8 Battle of Mazar-e-Sharif             2001-11-09               US/Northern Al…
-##  9 Siege of Kunduz                      2001-11-11..2001-11-23   US/Northern Al…
-## 10 Battle of Herat                      ..2001-11-12             US/Northern Al…
-## 11 Battle of Kabul                      2001-11-13..2001-11-14   US/Northern Al…
-## 12 Battle of Tarin Kowt                 2001-11-13..2001-11-14   US/Eastern All…
-## 13 Operation Trent                      2001-11-~15..2001-11-~30 US/UK-Taliban/…
-## 14 Battle of Kandahar                   2001-11-22..2001-12-07   US/AU/Eastern …
-## 15 Battle of Qala-i-Jangi               2001-11-25..2001-12-01   US/UK/Northern…
-## 16 Battle of Tora Bora                  2001-12-12..2001-12-17   US/Northern Al…
-## 17 Battle of Shawali Kowt               2001-12-03?              US/Eastern All…
-## 18 Battle of Sayyd Alma Kalay           2001-12-04~              US/Eastern All…
-## 19 Battle of Amami-Oshima               2001-12-22               JP-KP          
-## 20 Tsotsin-Yurt operation               2001-12-30..2002-01-03   RU-Chechen Ins…</code></pre>
+<pre><code>## # A tibble: 20 × 5
+##    Battle                               Date             Parties US_pa…¹ N_act…²
+##    &lt;chr&gt;                                &lt;mdate&gt;          &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Operation MH-2                       2001-03-08     … MK-Nat…       0       2
+##  2 2001 Bangladesh–India border clashes 2001-04-16..200… BD-ID         0       2
+##  3 Operation Vaksince                   2001-05-25..   … MK-Nat…       0       2
+##  4 Alkhan-Kala operation                2001-06-22..200… RU-Che…       0       2
+##  5 Battle of Vedeno                     2001-08-13..200… RU-Che…       0       2
+##  6 Operation Crescent Wind              2001-10-07..200… US/UK-…       1       3
+##  7 Operation Rhino                      2001-10-19..200… US-Tal…       1       2
+##  8 Battle of Mazar-e-Sharif             2001-11-09     … US/Nor…       1       4
+##  9 Siege of Kunduz                      2001-11-11..200… US/Nor…       1       4
+## 10 Battle of Herat                      ..2001-11-12   … US/Nor…       1       4
+## 11 Battle of Kabul                      2001-11-13..200… US/Nor…       1       3
+## 12 Battle of Tarin Kowt                 2001-11-13..200… US/Eas…       1       3
+## 13 Operation Trent                      2001-11-~15..20… US/UK-…       1       4
+## 14 Battle of Kandahar                   2001-11-22..200… US/AU/…       1       4
+## 15 Battle of Qala-i-Jangi               2001-11-25..200… US/UK/…       1       5
+## 16 Battle of Tora Bora                  2001-12-12..200… US/Nor…       1       4
+## 17 Battle of Shawali Kowt               2001-12-03?    … US/Eas…       1       3
+## 18 Battle of Sayyd Alma Kalay           2001-12-04~    … US/Eas…       1       3
+## 19 Battle of Amami-Oshima               2001-12-22     … JP-KP         0       2
+## 20 Tsotsin-Yurt operation               2001-12-30..200… RU-Che…       0       2
+## # … with abbreviated variable names ¹​US_party, ²​N_actors</code></pre>
 </div>
 <div id="expand" class="section level2">
 <h2>Expand</h2>
@@ -583,7 +586,7 @@ to expand approximate dates using the ‘approx_range’ argument in
 annotation of messydates, picking the most succinct representation of
 dates possible. We can contract back the dates in the Battles data
 previously expanded.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">contract =</span> <span class="fu">contract</span>(<span class="fu">expand</span>(battles<span class="sc">$</span>Date)))</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">contract =</span> <span class="fu">contract</span>(battles<span class="sc">$</span>Date))</span></code></pre></div>
 <pre><code>## # A tibble: 20 × 1
 ##    contract              
 ##    &lt;mdate&gt;               
@@ -632,25 +635,25 @@ models, especially for checking the robustness of results.</p>
 ##    min        max        median     mean       modal      random    
 ##    &lt;date&gt;     &lt;date&gt;     &lt;date&gt;     &lt;date&gt;     &lt;date&gt;     &lt;date&gt;    
 ##  1 2001-03-08 2001-03-08 2001-03-08 2001-03-08 2001-03-08 2001-03-08
-##  2 2001-04-16 2001-04-20 2001-04-18 2001-04-18 2001-04-16 2001-04-16
+##  2 2001-04-16 2001-04-20 2001-04-18 2001-04-18 2001-04-16 2001-04-19
 ##  3 2001-05-25 2001-05-25 2001-05-25 2001-05-25 2001-05-25 2001-05-25
-##  4 2001-06-22 2001-06-28 2001-06-25 2001-06-25 2001-06-22 2001-06-25
-##  5 2001-08-13 2001-08-26 2001-08-20 2001-08-19 2001-08-13 2001-08-26
-##  6 2001-10-07 2001-12-31 2001-11-19 2001-11-18 2001-10-07 2001-10-16
+##  4 2001-06-22 2001-06-28 2001-06-25 2001-06-25 2001-06-22 2001-06-28
+##  5 2001-08-13 2001-08-26 2001-08-20 2001-08-19 2001-08-13 2001-08-13
+##  6 2001-10-07 2001-12-31 2001-11-19 2001-11-18 2001-10-07 2001-10-18
 ##  7 2001-10-19 2001-10-20 2001-10-20 2001-10-19 2001-10-19 2001-10-19
 ##  8 2001-11-09 2001-11-09 2001-11-09 2001-11-09 2001-11-09 2001-11-09
 ##  9 2001-11-11 2001-11-23 2001-11-17 2001-11-17 2001-11-11 2001-11-21
 ## 10 2001-11-12 2001-11-12 2001-11-12 2001-11-12 2001-11-12 2001-11-12
-## 11 2001-11-13 2001-11-14 2001-11-14 2001-11-13 2001-11-13 2001-11-13
+## 11 2001-11-13 2001-11-14 2001-11-14 2001-11-13 2001-11-13 2001-11-14
 ## 12 2001-11-13 2001-11-14 2001-11-14 2001-11-13 2001-11-13 2001-11-13
-## 13 2001-11-15 2001-11-30 2001-11-23 2001-11-22 2001-11-15 2001-11-28
-## 14 2001-11-22 2001-12-07 2001-11-30 2001-11-29 2001-11-22 2001-12-01
-## 15 2001-11-25 2001-12-01 2001-11-28 2001-11-28 2001-11-25 2001-11-28
-## 16 2001-12-12 2001-12-17 2001-12-15 2001-12-14 2001-12-12 2001-12-16
+## 13 2001-11-15 2001-11-30 2001-11-23 2001-11-22 2001-11-15 2001-11-30
+## 14 2001-11-22 2001-12-07 2001-11-30 2001-11-29 2001-11-22 2001-11-28
+## 15 2001-11-25 2001-12-01 2001-11-28 2001-11-28 2001-11-25 2001-11-30
+## 16 2001-12-12 2001-12-17 2001-12-15 2001-12-14 2001-12-12 2001-12-15
 ## 17 2001-12-03 2001-12-03 2001-12-03 2001-12-03 2001-12-03 2001-12-03
 ## 18 2001-12-04 2001-12-04 2001-12-04 2001-12-04 2001-12-04 2001-12-04
 ## 19 2001-12-22 2001-12-22 2001-12-22 2001-12-22 2001-12-22 2001-12-22
-## 20 2001-12-30 2002-01-03 2002-01-01 2002-01-01 2001-12-30 2002-01-02</code></pre>
+## 20 2001-12-30 2002-01-03 2002-01-01 2002-01-01 2001-12-30 2002-01-03</code></pre>
 </div>
 <div id="additional-functionality" class="section level2">
 <h2>Additional functionality</h2>

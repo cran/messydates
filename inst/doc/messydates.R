@@ -24,7 +24,7 @@ expand(battles$Date)
 #  expand(battles$Date, approx_range = 1)
 
 ## ----contract, warning=FALSE--------------------------------------------------
-tibble::tibble(contract = contract(expand(battles$Date)))
+tibble::tibble(contract = contract(battles$Date))
 
 ## ----coerce, warning=FALSE----------------------------------------------------
 tibble::tibble(min = as.Date(battles$Date, min),
