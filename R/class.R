@@ -60,41 +60,29 @@
 #' @name class
 #' @seealso messydate
 NULL
-#> NULL
 
 #' @rdname class
 #' @export
 new_messydate <- function(x = character()) {
   stopifnot(is.character(x))
-  structure(x, class = c("mdate"))
+  structure(x, class = "mdate")
 }
 
 #' @rdname class
 #' @export
 validate_messydate <- function(x) {
   values <- unclass(x)
-
-  if (any(grepl("[A-WYZa-z]", values))) {
-    stop(
-      "The only alpha character allowed in messy dates is 'X' for
-      unspecified time components",
-      call. = FALSE
-    )
+  if (any(grepl("[A-WYZa-z]", values) & !grepl("^NA$", values))) {
+    stop("The only alpha character allowed in messy dates is 'X' for
+      unspecified time components", call. = FALSE)
   }
-
-  if (!all(grepl("[0-9]", values))) {
-    stop(
-      "mdate object requires at least one specified date component.",
-      call. = FALSE
-    )
+  if (!any(grepl("[0-9]", values))) {
+    stop("mdate object requires at least one specified date component.",
+         call. = FALSE)
     }
-
   if (any(grepl("!|\\(|\\)|\\+|\\=|\\/|,|;|>|<|_|\\^|'|&|\\$|#", values))) {
-    stop(
-      "mdate object can only consist of numbers and
-      some special symbols: []{}..X%?~",
-      call. = FALSE
-    )
+    stop("mdate object can only consist of numbers and
+      some special symbols: []{}..X%?~", call. = FALSE)
   }
   x
 }
@@ -105,6 +93,48 @@ print.mdate <- function(x, ...) {
   str(x)
 }
 
-#' @rdname class
 #' @export
-NA_mdate_ <- structure(NA_real_, class = "mdate")
+`[.mdate` <- function(x, ..., drop = TRUE) {
+  as_messydate(NextMethod("[", unclass(x)))
+}
+
+#' @export
+`[<-.mdate` <- function(x, i, ..., value) {
+  value <- as_messydate(value)
+  validate_messydate(value)
+  as_messydate(NextMethod("[<-", unclass(x)))
+}
+
+#' @export
+`[[.mdate` <- function(x, ...) {
+  as_messydate(NextMethod("[[", unclass(x)))
+}
+
+#' @export
+`[[<-.mdate` <- function(x, i, ..., value) {
+  value <- as_messydate(value)
+  validate_messydate(value)
+  as_messydate(NextMethod("[[<-", unclass(x)))
+}
+
+#' @export
+c.mdate <- function(...) {
+  vecs <- lapply(list(...), function(e) unclass(as_messydate(e)))
+  x <- as_messydate(unlist(vecs))
+  validate_messydate(x)
+}
+
+#' @export
+as.data.frame.mdate <- function(x, ...) {
+  as.data.frame.vector(x, ...)
+}
+
+#' @export
+rep.mdate <- function(x, ...) {
+  as_messydate(NextMethod("rep", unclass(x)))
+}
+
+#' @export
+as.list.mdate <- function(x, ...) {
+  lapply(unclass(x), as_messydate)
+}

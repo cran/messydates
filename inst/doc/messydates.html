@@ -12,7 +12,7 @@
 
 <meta name="author" content="Henrique Sposito" />
 
-<meta name="date" content="2023-01-20" />
+<meta name="date" content="2024-04-19" />
 
 <title>Working with messy dates</title>
 
@@ -121,13 +121,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -333,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Working with messy dates</h1>
 <h4 class="author">Henrique Sposito</h4>
-<h4 class="date">2023-01-20</h4>
+<h4 class="date">2024-04-19</h4>
 
 
 
@@ -358,33 +365,32 @@ sets of dates.</p>
 to <a href="https://en.wikipedia.org/wiki/List_of_battles_in_the_21st_century">Wikipedia</a>
 included in . The dates of these battles are often uncertain or
 approximate with different levels of date precision being reported.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(messydates)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>battles <span class="ot">&lt;-</span> messydates<span class="sc">::</span>battles</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>battles</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(messydates)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>battles <span class="ot">&lt;-</span> messydates<span class="sc">::</span>battles</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>battles</span></code></pre></div>
 <pre><code>## # A tibble: 20 × 5
-##    Battle                               Date             Parties US_pa…¹ N_act…²
-##    &lt;chr&gt;                                &lt;mdate&gt;          &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-##  1 Operation MH-2                       2001-03-08     … MK-Nat…       0       2
-##  2 2001 Bangladesh–India border clashes 2001-04-16..200… BD-ID         0       2
-##  3 Operation Vaksince                   2001-05-25     … MK-Nat…       0       2
-##  4 Alkhan-Kala operation                2001-06-22..200… RU-Che…       0       2
-##  5 Battle of Vedeno                     2001-08-13..200… RU-Che…       0       2
-##  6 Operation Crescent Wind              2001-10-07..200… US/UK-…       1       3
-##  7 Operation Rhino                      2001-10-19..200… US-Tal…       1       2
-##  8 Battle of Mazar-e-Sharif             2001-11-09     … US/Nor…       1       4
-##  9 Siege of Kunduz                      2001-11-11..200… US/Nor…       1       4
-## 10 Battle of Herat                      2001-11-12     … US/Nor…       1       4
-## 11 Battle of Kabul                      2001-11-13..200… US/Nor…       1       3
-## 12 Battle of Tarin Kowt                 2001-11-13..200… US/Eas…       1       3
-## 13 Operation Trent                      2001-11-~15..20… US/UK-…       1       4
-## 14 Battle of Kandahar                   2001-11-22..200… US/AU/…       1       4
-## 15 Battle of Qala-i-Jangi               2001-11-25..200… US/UK/…       1       5
-## 16 Battle of Tora Bora                  2001-12-12..200… US/Nor…       1       4
-## 17 Battle of Shawali Kowt               2001-12-03     … US/Eas…       1       3
-## 18 Battle of Sayyd Alma Kalay           2001-12-04     … US/Eas…       1       3
-## 19 Battle of Amami-Oshima               2001-12-22     … JP-KP         0       2
-## 20 Tsotsin-Yurt operation               2001-12-30..200… RU-Che…       0       2
-## # … with abbreviated variable names ¹​US_party, ²​N_actors</code></pre>
+##    Battle                               Date           Parties US_party N_actors
+##    &lt;chr&gt;                                &lt;mdate&gt;        &lt;chr&gt;      &lt;dbl&gt;    &lt;dbl&gt;
+##  1 Operation MH-2                       2001-03-08   … MK-Nat…        0        2
+##  2 2001 Bangladesh–India border clashes 2001-04-16..2… BD-ID          0        2
+##  3 Operation Vaksince                   2001-05-25   … MK-Nat…        0        2
+##  4 Alkhan-Kala operation                2001-06-22..2… RU-Che…        0        2
+##  5 Battle of Vedeno                     2001-08-13..2… RU-Che…        0        2
+##  6 Operation Crescent Wind              2001-10-07..2… US/UK-…        1        3
+##  7 Operation Rhino                      2001-10-19..2… US-Tal…        1        2
+##  8 Battle of Mazar-e-Sharif             2001-11-09   … US/Nor…        1        4
+##  9 Siege of Kunduz                      2001-11-11..2… US/Nor…        1        4
+## 10 Battle of Herat                      2001-11-12   … US/Nor…        1        4
+## 11 Battle of Kabul                      2001-11-13..2… US/Nor…        1        3
+## 12 Battle of Tarin Kowt                 2001-11-13..2… US/Eas…        1        3
+## 13 Operation Trent                      2001-11-~15..… US/UK-…        1        4
+## 14 Battle of Kandahar                   2001-11-22..2… US/AU/…        1        4
+## 15 Battle of Qala-i-Jangi               2001-11-25..2… US/UK/…        1        5
+## 16 Battle of Tora Bora                  2001-12-12..2… US/Nor…        1        4
+## 17 Battle of Shawali Kowt               2001-12-03   … US/Eas…        1        3
+## 18 Battle of Sayyd Alma Kalay           2001-12-04   … US/Eas…        1        3
+## 19 Battle of Amami-Oshima               2001-12-22   … JP-KP          0        2
+## 20 Tsotsin-Yurt operation               2001-12-30..2… RU-Che…        0        2</code></pre>
 <div id="coerce-to-messydates" class="section level2">
 <h2>Coerce to messydates</h2>
 <p>Previously researchers had to remove all types of imprecision from
@@ -394,8 +400,8 @@ various kinds of date imprecision. In the 2001 battles dataset, for
 example, we see that dates are not consistently reported, but
 <code>as_messydate()</code> still handles the coercion to
 <code>mdate</code> class.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>battles<span class="sc">$</span>Date</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>battles<span class="sc">$</span>Date</span></code></pre></div>
 <pre><code>##  &#39;mdate&#39; chr [1:20] &quot;2001-03-08&quot; &quot;2001-04-16..2001-04-20&quot; &quot;2001-05-25&quot; ...</code></pre>
 </div>
 <div id="annotate" class="section level2">
@@ -412,33 +418,32 @@ if we are not sure the “Battle of Kandahar” began on the 22nd of
 November or, alternatively, that the “Operation Vaksince” actually ended
 in the same day it began we use <code>on_or_before()</code> and
 <code>on_or after()</code> to annotate these dates.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(<span class="fu">ifelse</span>(battles<span class="sc">$</span>Battle <span class="sc">==</span> <span class="st">&quot;Battle of Herat&quot;</span>, <span class="fu">on_or_before</span>(battles<span class="sc">$</span>Date), battles<span class="sc">$</span>Date))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(<span class="fu">ifelse</span>(battles<span class="sc">$</span>Battle <span class="sc">==</span> <span class="st">&quot;Operation Vaksince&quot;</span>, <span class="fu">on_or_after</span>(battles<span class="sc">$</span>Date), battles<span class="sc">$</span>Date))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(battles)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(<span class="fu">ifelse</span>(battles<span class="sc">$</span>Battle <span class="sc">==</span> <span class="st">&quot;Battle of Herat&quot;</span>, <span class="fu">on_or_before</span>(battles<span class="sc">$</span>Date), battles<span class="sc">$</span>Date))</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(<span class="fu">ifelse</span>(battles<span class="sc">$</span>Battle <span class="sc">==</span> <span class="st">&quot;Operation Vaksince&quot;</span>, <span class="fu">on_or_after</span>(battles<span class="sc">$</span>Date), battles<span class="sc">$</span>Date))</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(battles)</span></code></pre></div>
 <pre><code>## # A tibble: 20 × 5
-##    Battle                               Date             Parties US_pa…¹ N_act…²
-##    &lt;chr&gt;                                &lt;mdate&gt;          &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-##  1 Operation MH-2                       2001-03-08     … MK-Nat…       0       2
-##  2 2001 Bangladesh–India border clashes 2001-04-16..200… BD-ID         0       2
-##  3 Operation Vaksince                   2001-05-25..   … MK-Nat…       0       2
-##  4 Alkhan-Kala operation                2001-06-22..200… RU-Che…       0       2
-##  5 Battle of Vedeno                     2001-08-13..200… RU-Che…       0       2
-##  6 Operation Crescent Wind              2001-10-07..200… US/UK-…       1       3
-##  7 Operation Rhino                      2001-10-19..200… US-Tal…       1       2
-##  8 Battle of Mazar-e-Sharif             2001-11-09     … US/Nor…       1       4
-##  9 Siege of Kunduz                      2001-11-11..200… US/Nor…       1       4
-## 10 Battle of Herat                      ..2001-11-12   … US/Nor…       1       4
-## 11 Battle of Kabul                      2001-11-13..200… US/Nor…       1       3
-## 12 Battle of Tarin Kowt                 2001-11-13..200… US/Eas…       1       3
-## 13 Operation Trent                      2001-11-~15..20… US/UK-…       1       4
-## 14 Battle of Kandahar                   2001-11-22..200… US/AU/…       1       4
-## 15 Battle of Qala-i-Jangi               2001-11-25..200… US/UK/…       1       5
-## 16 Battle of Tora Bora                  2001-12-12..200… US/Nor…       1       4
-## 17 Battle of Shawali Kowt               2001-12-03     … US/Eas…       1       3
-## 18 Battle of Sayyd Alma Kalay           2001-12-04     … US/Eas…       1       3
-## 19 Battle of Amami-Oshima               2001-12-22     … JP-KP         0       2
-## 20 Tsotsin-Yurt operation               2001-12-30..200… RU-Che…       0       2
-## # … with abbreviated variable names ¹​US_party, ²​N_actors</code></pre>
+##    Battle                               Date           Parties US_party N_actors
+##    &lt;chr&gt;                                &lt;mdate&gt;        &lt;chr&gt;      &lt;dbl&gt;    &lt;dbl&gt;
+##  1 Operation MH-2                       2001-03-08   … MK-Nat…        0        2
+##  2 2001 Bangladesh–India border clashes 2001-04-16..2… BD-ID          0        2
+##  3 Operation Vaksince                   2001-05-25.. … MK-Nat…        0        2
+##  4 Alkhan-Kala operation                2001-06-22..2… RU-Che…        0        2
+##  5 Battle of Vedeno                     2001-08-13..2… RU-Che…        0        2
+##  6 Operation Crescent Wind              2001-10-07..2… US/UK-…        1        3
+##  7 Operation Rhino                      2001-10-19..2… US-Tal…        1        2
+##  8 Battle of Mazar-e-Sharif             2001-11-09   … US/Nor…        1        4
+##  9 Siege of Kunduz                      2001-11-11..2… US/Nor…        1        4
+## 10 Battle of Herat                      ..2001-11-12 … US/Nor…        1        4
+## 11 Battle of Kabul                      2001-11-13..2… US/Nor…        1        3
+## 12 Battle of Tarin Kowt                 2001-11-13..2… US/Eas…        1        3
+## 13 Operation Trent                      2001-11-~15..… US/UK-…        1        4
+## 14 Battle of Kandahar                   2001-11-22..2… US/AU/…        1        4
+## 15 Battle of Qala-i-Jangi               2001-11-25..2… US/UK/…        1        5
+## 16 Battle of Tora Bora                  2001-12-12..2… US/Nor…        1        4
+## 17 Battle of Shawali Kowt               2001-12-03   … US/Eas…        1        3
+## 18 Battle of Sayyd Alma Kalay           2001-12-04   … US/Eas…        1        3
+## 19 Battle of Amami-Oshima               2001-12-22   … JP-KP          0        2
+## 20 Tsotsin-Yurt operation               2001-12-30..2… RU-Che…        0        2</code></pre>
 <p>Additional annotations for approximate dates, are indicated by adding
 a <code>~</code> to year, month, or day components, or whole dates to
 estimate values that are possibly correct. Day, month, or year,
@@ -448,33 +453,32 @@ reliability of the sources for the “Battle of Shawali Kowt” and we think
 the declared date for the battle is approximate, we can use
 <code>as_uncertain()</code> or <code>as_approximate()</code> to annotate
 these dates.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(<span class="fu">ifelse</span>(battles<span class="sc">$</span>Battle <span class="sc">==</span> <span class="st">&quot;Battle of Shawali Kowt&quot;</span>, <span class="fu">as_uncertain</span>(battles<span class="sc">$</span>Date), battles<span class="sc">$</span>Date))</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(<span class="fu">ifelse</span>(battles<span class="sc">$</span>Battle <span class="sc">==</span> <span class="st">&quot;Battle of Sayyd Alma Kalay&quot;</span>, <span class="fu">as_approximate</span>(battles<span class="sc">$</span>Date), battles<span class="sc">$</span>Date))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(battles)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(<span class="fu">ifelse</span>(battles<span class="sc">$</span>Battle <span class="sc">==</span> <span class="st">&quot;Battle of Shawali Kowt&quot;</span>, <span class="fu">as_uncertain</span>(battles<span class="sc">$</span>Date), battles<span class="sc">$</span>Date))</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>battles<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as_messydate</span>(<span class="fu">ifelse</span>(battles<span class="sc">$</span>Battle <span class="sc">==</span> <span class="st">&quot;Battle of Sayyd Alma Kalay&quot;</span>, <span class="fu">as_approximate</span>(battles<span class="sc">$</span>Date), battles<span class="sc">$</span>Date))</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(battles)</span></code></pre></div>
 <pre><code>## # A tibble: 20 × 5
-##    Battle                               Date             Parties US_pa…¹ N_act…²
-##    &lt;chr&gt;                                &lt;mdate&gt;          &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-##  1 Operation MH-2                       2001-03-08     … MK-Nat…       0       2
-##  2 2001 Bangladesh–India border clashes 2001-04-16..200… BD-ID         0       2
-##  3 Operation Vaksince                   2001-05-25..   … MK-Nat…       0       2
-##  4 Alkhan-Kala operation                2001-06-22..200… RU-Che…       0       2
-##  5 Battle of Vedeno                     2001-08-13..200… RU-Che…       0       2
-##  6 Operation Crescent Wind              2001-10-07..200… US/UK-…       1       3
-##  7 Operation Rhino                      2001-10-19..200… US-Tal…       1       2
-##  8 Battle of Mazar-e-Sharif             2001-11-09     … US/Nor…       1       4
-##  9 Siege of Kunduz                      2001-11-11..200… US/Nor…       1       4
-## 10 Battle of Herat                      ..2001-11-12   … US/Nor…       1       4
-## 11 Battle of Kabul                      2001-11-13..200… US/Nor…       1       3
-## 12 Battle of Tarin Kowt                 2001-11-13..200… US/Eas…       1       3
-## 13 Operation Trent                      2001-11-~15..20… US/UK-…       1       4
-## 14 Battle of Kandahar                   2001-11-22..200… US/AU/…       1       4
-## 15 Battle of Qala-i-Jangi               2001-11-25..200… US/UK/…       1       5
-## 16 Battle of Tora Bora                  2001-12-12..200… US/Nor…       1       4
-## 17 Battle of Shawali Kowt               2001-12-03?    … US/Eas…       1       3
-## 18 Battle of Sayyd Alma Kalay           2001-12-04~    … US/Eas…       1       3
-## 19 Battle of Amami-Oshima               2001-12-22     … JP-KP         0       2
-## 20 Tsotsin-Yurt operation               2001-12-30..200… RU-Che…       0       2
-## # … with abbreviated variable names ¹​US_party, ²​N_actors</code></pre>
+##    Battle                               Date           Parties US_party N_actors
+##    &lt;chr&gt;                                &lt;mdate&gt;        &lt;chr&gt;      &lt;dbl&gt;    &lt;dbl&gt;
+##  1 Operation MH-2                       2001-03-08   … MK-Nat…        0        2
+##  2 2001 Bangladesh–India border clashes 2001-04-16..2… BD-ID          0        2
+##  3 Operation Vaksince                   2001-05-25.. … MK-Nat…        0        2
+##  4 Alkhan-Kala operation                2001-06-22..2… RU-Che…        0        2
+##  5 Battle of Vedeno                     2001-08-13..2… RU-Che…        0        2
+##  6 Operation Crescent Wind              2001-10-07..2… US/UK-…        1        3
+##  7 Operation Rhino                      2001-10-19..2… US-Tal…        1        2
+##  8 Battle of Mazar-e-Sharif             2001-11-09   … US/Nor…        1        4
+##  9 Siege of Kunduz                      2001-11-11..2… US/Nor…        1        4
+## 10 Battle of Herat                      ..2001-11-12 … US/Nor…        1        4
+## 11 Battle of Kabul                      2001-11-13..2… US/Nor…        1        3
+## 12 Battle of Tarin Kowt                 2001-11-13..2… US/Eas…        1        3
+## 13 Operation Trent                      2001-11-~15..… US/UK-…        1        4
+## 14 Battle of Kandahar                   2001-11-22..2… US/AU/…        1        4
+## 15 Battle of Qala-i-Jangi               2001-11-25..2… US/UK/…        1        5
+## 16 Battle of Tora Bora                  2001-12-12..2… US/Nor…        1        4
+## 17 Battle of Shawali Kowt               2001-12-03?  … US/Eas…        1        3
+## 18 Battle of Sayyd Alma Kalay           2001-12-04~  … US/Eas…        1        3
+## 19 Battle of Amami-Oshima               2001-12-22   … JP-KP          0        2
+## 20 Tsotsin-Yurt operation               2001-12-30..2… RU-Che…        0        2</code></pre>
 </div>
 <div id="expand" class="section level2">
 <h2>Expand</h2>
@@ -484,7 +488,7 @@ or annotated with ‘XX’), or approximate dates (annotated ‘~’) into lists
 of dates. As these dates may refer to several possible dates, the
 function “opens” these values to include all the possible dates implied.
 Let’s expand the dates in the Battles dataset.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">expand</span>(battles<span class="sc">$</span>Date)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">expand</span>(battles<span class="sc">$</span>Date)</span></code></pre></div>
 <pre><code>## [[1]]
 ## [1] &quot;2001-03-08&quot;
 ## 
@@ -577,7 +581,7 @@ Let’s expand the dates in the Battles dataset.</p>
 <p>Note that to expand approximate dates one needs to declare the range
 to expand approximate dates using the ‘approx_range’ argument in
 <code>expand()</code></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">expand</span>(battles<span class="sc">$</span>Date, <span class="at">approx_range =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">expand</span>(battles<span class="sc">$</span>Date, <span class="at">approx_range =</span> <span class="dv">1</span>)</span></code></pre></div>
 </div>
 <div id="contract" class="section level2">
 <h2>Contract</h2>
@@ -586,7 +590,7 @@ to expand approximate dates using the ‘approx_range’ argument in
 annotation of messydates, picking the most succinct representation of
 dates possible. We can contract back the dates in the Battles data
 previously expanded.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">contract =</span> <span class="fu">contract</span>(battles<span class="sc">$</span>Date))</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">contract =</span> <span class="fu">contract</span>(battles<span class="sc">$</span>Date))</span></code></pre></div>
 <pre><code>## # A tibble: 20 × 1
 ##    contract              
 ##    &lt;mdate&gt;               
@@ -625,35 +629,35 @@ ranges of dates (<code>min</code>), the latest possible date
 a <code>random</code> selection from among the candidate dates. These
 functions are particularly useful for use with existing methods and
 models, especially for checking the robustness of results.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">min =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, min),</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">max =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, max),</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">median =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, median),</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">mean =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, mean),</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">modal =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, modal),</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">random =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, random))</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">min =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, min),</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>               <span class="at">max =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, max),</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>               <span class="at">median =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, median),</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>               <span class="at">mean =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, mean),</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>               <span class="at">modal =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, modal),</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>               <span class="at">random =</span> <span class="fu">as.Date</span>(battles<span class="sc">$</span>Date, random))</span></code></pre></div>
 <pre><code>## # A tibble: 20 × 6
 ##    min        max        median     mean       modal      random    
 ##    &lt;date&gt;     &lt;date&gt;     &lt;date&gt;     &lt;date&gt;     &lt;date&gt;     &lt;date&gt;    
 ##  1 2001-03-08 2001-03-08 2001-03-08 2001-03-08 2001-03-08 2001-03-08
-##  2 2001-04-16 2001-04-20 2001-04-18 2001-04-18 2001-04-16 2001-04-19
+##  2 2001-04-16 2001-04-20 2001-04-18 2001-04-18 2001-04-16 2001-04-16
 ##  3 2001-05-25 2001-05-25 2001-05-25 2001-05-25 2001-05-25 2001-05-25
-##  4 2001-06-22 2001-06-28 2001-06-25 2001-06-25 2001-06-22 2001-06-28
-##  5 2001-08-13 2001-08-26 2001-08-20 2001-08-19 2001-08-13 2001-08-13
-##  6 2001-10-07 2001-12-31 2001-11-19 2001-11-18 2001-10-07 2001-10-18
-##  7 2001-10-19 2001-10-20 2001-10-20 2001-10-19 2001-10-19 2001-10-19
+##  4 2001-06-22 2001-06-28 2001-06-25 2001-06-25 2001-06-22 2001-06-24
+##  5 2001-08-13 2001-08-26 2001-08-20 2001-08-19 2001-08-13 2001-08-26
+##  6 2001-10-07 2001-12-31 2001-11-19 2001-11-18 2001-10-07 2001-10-08
+##  7 2001-10-19 2001-10-20 2001-10-20 2001-10-19 2001-10-19 2001-10-20
 ##  8 2001-11-09 2001-11-09 2001-11-09 2001-11-09 2001-11-09 2001-11-09
-##  9 2001-11-11 2001-11-23 2001-11-17 2001-11-17 2001-11-11 2001-11-21
+##  9 2001-11-11 2001-11-23 2001-11-17 2001-11-17 2001-11-11 2001-11-23
 ## 10 2001-11-12 2001-11-12 2001-11-12 2001-11-12 2001-11-12 2001-11-12
-## 11 2001-11-13 2001-11-14 2001-11-14 2001-11-13 2001-11-13 2001-11-14
+## 11 2001-11-13 2001-11-14 2001-11-14 2001-11-13 2001-11-13 2001-11-13
 ## 12 2001-11-13 2001-11-14 2001-11-14 2001-11-13 2001-11-13 2001-11-13
-## 13 2001-11-15 2001-11-30 2001-11-23 2001-11-22 2001-11-15 2001-11-30
-## 14 2001-11-22 2001-12-07 2001-11-30 2001-11-29 2001-11-22 2001-11-28
-## 15 2001-11-25 2001-12-01 2001-11-28 2001-11-28 2001-11-25 2001-11-30
-## 16 2001-12-12 2001-12-17 2001-12-15 2001-12-14 2001-12-12 2001-12-15
+## 13 2001-11-15 2001-11-30 2001-11-23 2001-11-22 2001-11-15 2001-11-20
+## 14 2001-11-22 2001-12-07 2001-11-30 2001-11-29 2001-11-22 2001-11-30
+## 15 2001-11-25 2001-12-01 2001-11-28 2001-11-28 2001-11-25 2001-11-28
+## 16 2001-12-12 2001-12-17 2001-12-15 2001-12-14 2001-12-12 2001-12-13
 ## 17 2001-12-03 2001-12-03 2001-12-03 2001-12-03 2001-12-03 2001-12-03
 ## 18 2001-12-04 2001-12-04 2001-12-04 2001-12-04 2001-12-04 2001-12-04
 ## 19 2001-12-22 2001-12-22 2001-12-22 2001-12-22 2001-12-22 2001-12-22
-## 20 2001-12-30 2002-01-03 2002-01-01 2002-01-01 2001-12-30 2002-01-03</code></pre>
+## 20 2001-12-30 2002-01-03 2002-01-01 2002-01-01 2001-12-30 2001-12-30</code></pre>
 </div>
 <div id="additional-functionality" class="section level2">
 <h2>Additional functionality</h2>
@@ -662,33 +666,30 @@ models, especially for checking the robustness of results.</p>
 variables. <code>is_messydate()</code> tests whether the object inherits
 the <code>mdate</code> class. <code>is_intersecting()</code> tests
 whether there is any intersection between two messy dates.
-<code>is_element()</code> similarly tests whether a messy date can be
-found within a messy date range or set. <code>is_similar()</code> tests
-whether two dates contain similar components. <code>is_precise()</code>
-tests whether certain date is precise.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_messydate</span>(battles<span class="sc">$</span>Date)</span></code></pre></div>
+<code>is_subset()</code> similarly tests whether one or more messy dates
+can be found within a messy date range or set. <code>is_similar()</code>
+tests whether two dates contain similar components.
+<code>is_precise()</code> tests whether certain date is precise.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">is_messydate</span>(battles<span class="sc">$</span>Date)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_intersecting</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">1</span>]), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">is_intersecting</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">1</span>]), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
 <pre><code>## [1] FALSE</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_element</span>(<span class="fu">as_messydate</span>(<span class="st">&quot;2001-04-17&quot;</span>), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">is_subset</span>(<span class="fu">as_messydate</span>(<span class="st">&quot;2001-04-17&quot;</span>), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_similar</span>(<span class="fu">as_messydate</span>(<span class="st">&quot;2001-08-03&quot;</span>), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">1</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">is_similar</span>(<span class="fu">as_messydate</span>(<span class="st">&quot;2001-08-03&quot;</span>), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">1</span>]))</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_precise</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">is_precise</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
 <pre><code>## [1] FALSE</code></pre>
-<p>Additionally, one can perform intersection, union, or ‘join’ of
+<p>Additionally, one can perform intersection or union of
 messydates.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md_intersect</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">9</span>]), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">10</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">9</span>]) <span class="sc">%intersect%</span> <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">10</span>])</span></code></pre></div>
 <pre><code>## [1] &quot;2001-11-12&quot;</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md_union</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">17</span>]), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">18</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">17</span>]) <span class="sc">%union%</span> <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">18</span>])</span></code></pre></div>
 <pre><code>## [1] &quot;2001-12-03&quot; &quot;2001-12-04&quot;</code></pre>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md_multiset</span>(<span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">1</span>]), <span class="fu">as_messydate</span>(battles<span class="sc">$</span>Date[<span class="dv">2</span>]))</span></code></pre></div>
-<pre><code>## [1] &quot;2001-03-08&quot; &quot;2001-04-16&quot; &quot;2001-04-17&quot; &quot;2001-04-18&quot; &quot;2001-04-19&quot;
-## [6] &quot;2001-04-20&quot;</code></pre>
 <p>As well, we can do some arithmetic operations in the
 <code>mdate</code> variable.</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="st">&quot;one day more&quot;</span> <span class="ot">=</span> battles<span class="sc">$</span>Date <span class="sc">+</span> <span class="dv">1</span>,</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;one day less&quot;</span> <span class="ot">=</span> battles<span class="sc">$</span>Date <span class="sc">-</span> <span class="st">&quot;1 day&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="st">&quot;one day more&quot;</span> <span class="ot">=</span> battles<span class="sc">$</span>Date <span class="sc">+</span> <span class="dv">1</span>,</span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a>               <span class="st">&quot;one day less&quot;</span> <span class="ot">=</span> battles<span class="sc">$</span>Date <span class="sc">-</span> <span class="st">&quot;1 day&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 20 × 2
 ##    `one day more`         `one day less`        
 ##    &lt;mdate&gt;                &lt;mdate&gt;               
@@ -712,6 +713,28 @@ messydates.</p>
 ## 18 2001-12-05             2001-12-03            
 ## 19 2001-12-23             2001-12-21            
 ## 20 2001-12-31..2002-01-04 2001-12-29..2002-01-02</code></pre>
+<p>Finally, one can run logical and proportional comparisons on mdate
+objects.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="fu">as_messydate</span>(<span class="st">&quot;2012-06-03&quot;</span>) <span class="sc">&lt;</span> <span class="fu">as.Date</span>(<span class="st">&quot;2012-06-02&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="fu">as_messydate</span>(<span class="st">&quot;2012-06-03&quot;</span>) <span class="sc">&gt;</span> <span class="fu">as.Date</span>(<span class="st">&quot;2012-06-02&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="fu">as_messydate</span>(<span class="st">&quot;2012-06-03&quot;</span>) <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">&quot;2012-06-02&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="fu">as_messydate</span>(<span class="st">&quot;2012-06-03&quot;</span>) <span class="sc">&lt;=</span> <span class="fu">as.Date</span>(<span class="st">&quot;2012-06-02&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="fu">as_messydate</span>(<span class="st">&quot;2012-06&quot;</span>) <span class="sc">%g%</span> <span class="fu">as_messydate</span>(<span class="st">&quot;2012-06-02&quot;</span>) <span class="co"># proportion greater than</span></span></code></pre></div>
+<pre><code>## [1] 0.9333333</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="fu">as_messydate</span>(<span class="st">&quot;2012-06&quot;</span>) <span class="sc">%l%</span> <span class="fu">as_messydate</span>(<span class="st">&quot;2012-06-02&quot;</span>) <span class="co"># proportion smaller than</span></span></code></pre></div>
+<pre><code>## [1] 0.03333333</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a><span class="fu">as_messydate</span>(<span class="st">&quot;2012-06&quot;</span>) <span class="sc">%ge%</span> <span class="st">&quot;2012-06-02&quot;</span>  <span class="co"># proportion greater or equal than</span></span></code></pre></div>
+<pre><code>## [1] 0.9666667</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a><span class="fu">as_messydate</span>(<span class="st">&quot;2012-06&quot;</span>) <span class="sc">%le%</span> <span class="st">&quot;2012-06-02&quot;</span> <span class="co"># proportion smaller or equal than</span></span></code></pre></div>
+<pre><code>## [1] 0.06666667</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a><span class="fu">as_messydate</span>(<span class="st">&quot;2012-06&quot;</span>) <span class="sc">%&gt;&lt;%</span> <span class="fu">as_messydate</span>(<span class="st">&quot;2012-06-15..2012-07-15&quot;</span>)  <span class="co"># proportion of dates in the first vector and in the second vector (exclusive)</span></span></code></pre></div>
+<pre><code>## [1] 0.516129</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a><span class="fu">as_messydate</span>(<span class="st">&quot;2012-06&quot;</span>) <span class="sc">%&gt;=&lt;%</span> <span class="fu">as_messydate</span>(<span class="st">&quot;2012-06-15..2012-07-15&quot;</span>)  <span class="co"># proportion of dates and in the first vector in the second vector (inclusive)</span></span></code></pre></div>
+<pre><code>## [1] 0.5333333</code></pre>
 </div>
 </div>
 

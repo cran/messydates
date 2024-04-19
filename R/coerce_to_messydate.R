@@ -102,18 +102,38 @@ as_messydate.character <- function(x, resequence = NULL) {
   if (isTRUE(resequence == "interactive")) {
     d <- ask_user(d)
   }
-  d <- standardise_ranges(d)
   d <- standardise_unspecifieds(d)
   d <- standardise_date_input(d)
   d <- standardise_widths(d)
   new_messydate(d)
 }
 
+#' @describeIn messydate Coerce list date objects to the most concise
+#' representation of `mdate` class
+#' @examples
+#' as_messydate(list(c("2012-06-01", "2012-06-02", "2012-06-03")))
+#' as_messydate(list(c("2012-06-01", "2012-06-02", "2012-06-03",
+#' "{2012-06-01, 2012-06-02, 2012-06-03}", "2012-06-01", "2012-06-03")))
+#' @export
+as_messydate.list <- function(x, resequence = FALSE) {
+  lapply(x, function (y) {
+    suppressMessages(contract(paste(new_messydate(as.character(y)),
+                                    collapse = ",")))
+  })
+}
+
+#' @rdname messydate
+#' @export
+mdate <- as_messydate
+
 # Helper functions
 standardise_text <- function(v) {
-  dates <- ifelse(stringr::str_detect(v, "([:alpha:]{3})") &
-                    !grepl("bce$", v, ignore.case = TRUE),
+  dates <- ifelse(stringr::str_detect(v, "([:alpha:]{4})") &
+                    !grepl("bce$|^XXXX|XXXX$", v, ignore.case = TRUE),
                   extract_from_text(v), v)
+  dates <- ifelse(grepl("Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec",
+                        dates, ignore.case = TRUE),
+                  written_month(dates), dates)
   dates
 }
 
@@ -123,14 +143,18 @@ standardise_date_separators <- function(dates) {
   dates <- stringr::str_replace_all(dates, "\\/", "-")
   dates <- stringr::str_remove_all(dates, "\\(|\\)|\\{|\\}|\\[|\\]")
   dates <- stringr::str_trim(dates, side = "both")
-  # Adds zero padding to days, months, and ranges
+  # Adds zero padding to days, months, sets, and ranges
   dates <- stringr::str_replace_all(dates, "-([:digit:])-", "-0\\1-")
   dates <- stringr::str_replace_all(dates, "([:digit:]{2})-([:digit:])$",
                                     "\\1-0\\2")
   dates <- stringr::str_replace_all(dates, "^([:digit:])-([:digit:]{2})",
                                     "0\\1-\\2")
+  dates <- stringr::str_replace_all(dates, "\\_|\\:", "..") # range separators
   dates <- stringr::str_replace_all(dates, "-([:digit:])\\.\\.", "-0\\1\\.\\.")
   dates <- stringr::str_replace_all(dates, "\\.\\.([:digit:])-", "\\.\\.0\\1-")
+  dates <- stringr::str_replace_all(dates, " \\, |\\, | \\,", ",") # set separators
+  dates <- stringr::str_replace_all(dates, "-([:digit:]),", "-0\\1,")
+  dates <- stringr::str_replace_all(dates, ",([:digit:])-", "\\,0\\1-")
   dates
 }
 
@@ -235,20 +259,22 @@ ask_user <- function(dates) {
   dates
 }
 
-standardise_ranges <- function(dates) {
-  dates <- stringr::str_replace_all(dates, "_", "..")
-  dates <- stringr::str_replace_all(dates, ":", "..")
-  dates
-}
-
 standardise_unspecifieds <- function(dates) {
   dates <- stringr::str_replace_all(dates, "^NA", "XXXX")
   dates <- stringr::str_replace_all(dates, "-NA", "-XX")
   dates <- stringr::str_replace_all(dates, "0000", "XXXX")
-  dates <- stringr::str_replace_all(dates, "-00-|-0-|-0$|-00$", "-XX-")
+  dates <- stringr::str_replace_all(dates, "-00-|-0-|-0$|-00$|-\\?\\?-", "-XX-")
   dates <- stringr::str_replace_all(dates, "\\?\\?\\?\\?", "XXXX")
-  dates <- stringr::str_replace_all(dates, "-\\?\\?", "-XX")
-  dates <- stringr::str_replace_all(dates, "-XX$", "")
+  dates <- stringr::str_replace_all(dates, "^(XX)-([:digit:]{4}$)", "\\2")
+  dates <- stringr::str_replace_all(dates, "^(XX)-(XX)-([:digit:]{4}$)", "\\3")
+  dates <- stringr::str_replace_all(dates, "^(XX)-([:digit:]{2})-([:digit:]{4}$)",
+                                    "\\3-\\2")
+  dates <- stringr::str_replace_all(dates, "^([:digit:]{2})-([:digit:]{2})-(XXXX$)",
+                                    "\\3-\\2-\\1")
+  dates <- stringr::str_replace_all(dates, "-X-X$|-XX-XX$|-XX$|-XX-\\?\\?$|
+                                    |-\\?-\\?$|-\\?\\?$|-\\?\\?-\\?\\?$", "")
+  dates <- stringr::str_replace_all(dates, "-XX\\,", ",")
+  dates <- stringr::str_replace_all(dates, "-XX\\.\\.", "..")
   dates <- ifelse(stringr::str_detect(dates, "^[:digit:]{4}\\~$"),
                   paste0("~", stringr::str_remove(dates, "\\~")), dates)
   dates
@@ -257,7 +283,7 @@ standardise_unspecifieds <- function(dates) {
 standardise_date_input <- function(dates) {
   dates <- ifelse(stringr::str_detect(dates, "(BCE|Bce|bce|bc|BC|Bc|bC)"),
                   as_bc_dates(dates), dates)
-  dates <- stringr::str_remove_all(dates, "(ad|AD|Ad|aD|CE|Ce|ce)")
+  dates <- stringr::str_remove_all(dates, "(ad|AD|Ad|aD|CE|Ce|ce|AC|ac|Ac|aC)")
   dates <- trimws(dates, "both")
   dates
 }
@@ -319,6 +345,46 @@ extract_from_text <- function(v) {
   out
 }
 
+written_month <- function(dates) {
+  dates <- stringr::str_squish(stringr::str_replace_all(tolower(dates),
+                                                        ",|-", " "))
+  dates <- stringr::str_replace_all(dates,
+                                    "([:alpha:]{3}) ([:digit:]{1,2}) ([:digit:]{4})",
+                                    "\\3 \\1 \\2")
+  dates <- stringr::str_replace_all(dates,
+                                    "([:digit:]{4}) ([:digit:]{1,2}) ([:alpha:]{3})",
+                                    "\\1 \\3 \\2")
+  dates <- stringr::str_replace_all(dates, " jan ", "-01-")
+  dates <- stringr::str_replace_all(dates, " feb ", "-02-")
+  dates <- stringr::str_replace_all(dates, " mar ", "-03-")
+  dates <- stringr::str_replace_all(dates, " apr ", "-04-")
+  dates <- stringr::str_replace_all(dates, " may ", "-05-")
+  dates <- stringr::str_replace_all(dates, " jun ", "-06-")
+  dates <- stringr::str_replace_all(dates, " jul ", "-07-")
+  dates <- stringr::str_replace_all(dates, " aug ", "-08-")
+  dates <- stringr::str_replace_all(dates, " sep ", "-09-")
+  dates <- stringr::str_replace_all(dates, " oct ", "-10-")
+  dates <- stringr::str_replace_all(dates, " nov ", "-11-")
+  dates <- stringr::str_replace_all(dates, " dec ", "-12-")
+  # 6 digit my or ym dates
+  dates <- stringr::str_replace_all(dates,
+                                    "([:alpha:]{3}) ([:digit:]{4})",
+                                    "\\2 \\1")
+  dates <- stringr::str_replace_all(dates, " jan$", "-01")
+  dates <- stringr::str_replace_all(dates, " feb$", "-02")
+  dates <- stringr::str_replace_all(dates, " mar$", "-03")
+  dates <- stringr::str_replace_all(dates, " apr$", "-04")
+  dates <- stringr::str_replace_all(dates, " may$", "-05")
+  dates <- stringr::str_replace_all(dates, " jun$", "-06")
+  dates <- stringr::str_replace_all(dates, " jul$", "-07")
+  dates <- stringr::str_replace_all(dates, " aug$", "-08")
+  dates <- stringr::str_replace_all(dates, " sep$", "-09")
+  dates <- stringr::str_replace_all(dates, " oct$", "-10")
+  dates <- stringr::str_replace_all(dates, " nov$", "-11")
+  dates <- stringr::str_replace_all(dates, " dec$", "-12")
+  dates
+}
+
 as_bc_dates <- function(dates) {
   dates <- ifelse(stringr::str_count(dates, "(BCE|Bce|bce|bc|BC|Bc|bC)") == 2,
                   st_negative_range(dates), dates)
@@ -369,7 +435,7 @@ add_zero_padding <- function(dates) {
                                       "^([:digit:]{2})~$|^([:digit:]{2})\\?$"),
                   paste0("00", dates), dates)
   dates <- ifelse(stringr::str_detect(dates,
-                                      "^([:digit:]{3})~$|^([:digit:]{3})\\?$"),
+                                      "^([:digit:]{3})~$|^([:digit:]{3})\\?$|^([:digit:]{3})-([:digit:]{2}$)"),
                   paste0("0", dates), dates)
   # Year only
   dates <- stringr::str_replace_all(dates, "^([:digit:]{1})$", "000\\1")
@@ -400,6 +466,12 @@ add_zero_range <- function(dates) {
                 paste0("00", x), x)
     x <- ifelse(stringr::str_detect(x, "^([:digit:]{3})~$|^([:digit:]{3})\\?$"),
                 paste0("0", x), x)
+    x <- ifelse(stringr::str_detect(x, "^([:digit:]{1})~$|^([:digit:]{1})\\?$"),
+                paste0("000", x), x)
+    x <- ifelse(stringr::str_detect(x, "^([:digit:]{2})~$|^([:digit:]{2})\\?$"),
+                paste0("00", x), x)
+    x <- ifelse(stringr::str_detect(x, "^([:digit:]{3})~$|^([:digit:]{3})\\?$|^([:digit:]{3})-([:digit:]{2}$)"),
+                paste0("0", x), x)
   })
   dates <- purrr::map_chr(dates, paste, collapse = "..")
   dates
@@ -425,7 +497,7 @@ add_zero_set <- function(dates) {
                 paste0("000", x), x)
     x <- ifelse(stringr::str_detect(x, "^([:digit:]{2})~$|^([:digit:]{2})\\?$"),
                 paste0("00", x), x)
-    x <- ifelse(stringr::str_detect(x, "^([:digit:]{3})~$|^([:digit:]{3})\\?$"),
+    x <- ifelse(stringr::str_detect(x, "^([:digit:]{3})~$|^([:digit:]{3})\\?$|^([:digit:]{3})-([:digit:]{2}$)"),
                 paste0("0", x), x)
   })
   dates <- purrr::map_chr(dates, paste, collapse = ",")
@@ -496,7 +568,14 @@ complete_ambiguous_19 <- function(d) {
 }
 
 #' @describeIn messydate Composes `mdate` from multiple variables
-#' @param ... One (yyyy-mm-dd) or three (yyyy, mm, dd) variables
+#' @param ... One (yyyy-mm-dd), two (yyyy-mm-dd, yyyy-mm-dd),
+#' or three (yyyy, mm, dd) variables.
+#' @details If three date variables are passed to `make_messydate()`,
+#' function will create a single date (yyyy-mm-dd) from it.
+#' If two date variables are passed to `make_messydate()`,
+#' function will create a range of dates from it (yyyy-mm-dd..yyyy-mm-dd).
+#' If one date variable is passed to `make_messydate()`,
+#' function defaults to `as_messydate()`.
 #' @importFrom purrr map pmap_chr
 #' @examples
 #' make_messydate("2010", "10", "10")
@@ -506,11 +585,15 @@ make_messydate <- function(..., resequence = FALSE) {
   if (length(dots) == 1) {
     dots <- do.call(as.character, dots)
     dates <- unlist(dots)
+  } else if (length(dots) == 2) {
+    dots <- purrr::map(dots, as.character)
+    dates <- unlist(purrr::pmap_chr(dots, paste, sep = ".."))
+    dates <- gsub("NA..NA", "NA", dates)
   } else if (length(dots) == 3) {
     dots <- purrr::map(dots, as.character)
     dates <- unlist(purrr::pmap_chr(dots, paste, sep = "-"))
     dates <- gsub("NA-NA-NA", "NA", dates)
-  } else stop("Pass make_messydate() one variable (yyyy-mm-dd)
-              or three variables (yyyy, mm, dd).")
+  } else stop("make_messydate() takes one variable (yyyy-mm-dd),
+  two variables (yyyy-mm-dd, yyyy-mm-dd), or three variables (yyyy, mm, dd).")
   as_messydate(dates, resequence)
 }
