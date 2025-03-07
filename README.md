@@ -1,5 +1,5 @@
 
-# messydates <img src="man/figures/messydates_hexlogo.png" align="right" width="220"/>
+# messydates <img src="man/figures/messydates_hexlogo.png" alt="messydates package logo" align="right" width="220"/>
 
 <!-- badges: start -->
 
@@ -76,7 +76,7 @@ pkg_comparison <- tibble::tribble(~Example, ~OriginalDate,
                 messydates = messydates::as_messydate(OriginalDate))
 ```
 
-<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<table class="table table-striped" style="color: black; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -390,7 +390,7 @@ resolve_mdate <- pkg_comparison %>%
          max = as.Date(messydates, max))
 ```
 
-<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<table class="table table-striped" style="color: black; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -413,13 +413,13 @@ max
 2012-01-01
 </td>
 <td style="text-align:left;">
-2012-01-01
+-033-01-01
 </td>
 <td style="text-align:left;">
-2012-01-01
+2012-10-31
 </td>
 <td style="text-align:left;">
-2012-01-01
+2599-12-31
 </td>
 </tr>
 <tr>
@@ -427,10 +427,10 @@ max
 2599-12-31
 </td>
 <td style="text-align:left;">
-2599-12-31
+-033-01-01
 </td>
 <td style="text-align:left;">
-2599-12-31
+2012-10-31
 </td>
 <td style="text-align:left;">
 2599-12-31
@@ -441,13 +441,13 @@ max
 0476
 </td>
 <td style="text-align:left;">
-0476-01-01
+-033-01-01
 </td>
 <td style="text-align:left;">
-0476-07-02
+2012-10-31
 </td>
 <td style="text-align:left;">
-0476-12-31
+2599-12-31
 </td>
 </tr>
 <tr>
@@ -458,10 +458,10 @@ max
 -033-01-01
 </td>
 <td style="text-align:left;">
--033-07-02
+2012-10-31
 </td>
 <td style="text-align:left;">
--033-12-31
+2599-12-31
 </td>
 </tr>
 <tr>
@@ -469,13 +469,13 @@ max
 2012-02-01
 </td>
 <td style="text-align:left;">
-2012-02-01
+-033-01-01
 </td>
 <td style="text-align:left;">
-2012-02-01
+2012-10-31
 </td>
 <td style="text-align:left;">
-2012-02-01
+2599-12-31
 </td>
 </tr>
 <tr>
@@ -483,27 +483,13 @@ max
 2012-10-31
 </td>
 <td style="text-align:left;">
-2012-10-31
+-033-01-01
 </td>
 <td style="text-align:left;">
 2012-10-31
 </td>
 <td style="text-align:left;">
-2012-10-31
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2012-10-31
-</td>
-<td style="text-align:left;">
-2012-10-31
-</td>
-<td style="text-align:left;">
-2012-10-31
-</td>
-<td style="text-align:left;">
-2012-10-31
+2599-12-31
 </td>
 </tr>
 <tr>
@@ -511,13 +497,27 @@ max
 2012-10-31
 </td>
 <td style="text-align:left;">
-2012-10-31
+-033-01-01
 </td>
 <td style="text-align:left;">
 2012-10-31
 </td>
 <td style="text-align:left;">
+2599-12-31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 2012-10-31
+</td>
+<td style="text-align:left;">
+-033-01-01
+</td>
+<td style="text-align:left;">
+2012-10-31
+</td>
+<td style="text-align:left;">
+2599-12-31
 </td>
 </tr>
 <tr>
@@ -525,13 +525,13 @@ max
 2012-01-12~
 </td>
 <td style="text-align:left;">
-2012-01-12
+-033-01-01
 </td>
 <td style="text-align:left;">
-2012-01-12
+2012-10-31
 </td>
 <td style="text-align:left;">
-2012-01-12
+2599-12-31
 </td>
 </tr>
 <tr>
@@ -539,13 +539,13 @@ max
 2012-01-01?
 </td>
 <td style="text-align:left;">
-2012-01-01
+-033-01-01
 </td>
 <td style="text-align:left;">
-2012-01-01
+2012-10-31
 </td>
 <td style="text-align:left;">
-2012-01-01
+2599-12-31
 </td>
 </tr>
 <tr>
@@ -553,13 +553,13 @@ max
 2012-01
 </td>
 <td style="text-align:left;">
-2012-01-01
+-033-01-01
 </td>
 <td style="text-align:left;">
-2012-01-16
+2012-10-31
 </td>
 <td style="text-align:left;">
-2012-01-31
+2599-12-31
 </td>
 </tr>
 <tr>
@@ -567,13 +567,13 @@ max
 ..2012-01-12
 </td>
 <td style="text-align:left;">
-2012-01-12
+-033-01-01
 </td>
 <td style="text-align:left;">
-2012-01-12
+2012-10-31
 </td>
 <td style="text-align:left;">
-2012-01-12
+2599-12-31
 </td>
 </tr>
 <tr>
@@ -581,13 +581,13 @@ max
 2012-11-01..2012-12-01
 </td>
 <td style="text-align:left;">
-2012-11-01
+-033-01-01
 </td>
 <td style="text-align:left;">
-2012-11-16
+2012-10-31
 </td>
 <td style="text-align:left;">
-2012-12-01
+2599-12-31
 </td>
 </tr>
 <tr>
@@ -595,13 +595,13 @@ max
 {2012-05-26,2012-11-19,2012-12-04}
 </td>
 <td style="text-align:left;">
-2012-05-26
+-033-01-01
 </td>
 <td style="text-align:left;">
-2012-11-19
+2012-10-31
 </td>
 <td style="text-align:left;">
-2012-12-04
+2599-12-31
 </td>
 </tr>
 </tbody>
@@ -630,7 +630,7 @@ Please see the cheat sheet and [the messydates
 website](https://globalgov.github.io/messydates/) for more information
 about how to use `{messydates}`.
 
-<a href="https://github.com/globalgov/messydates/blob/main/inst/figures/cheatsheet.pdf"><img src="https://raw.githubusercontent.com/globalgov/messydates/main/man/figures/cheatsheet.png" width="525" height="378"/></a>
+<a href="https://github.com/globalgov/messydates/blob/main/inst/figures/cheatsheet.pdf"><img src="https://raw.githubusercontent.com/globalgov/messydates/main/man/figures/cheatsheet.png" alt="messydates cheatsheet" width="525" height="378"/></a>
 
 ## Installation
 
@@ -657,6 +657,6 @@ institutions by examining the historical dynamics of institutional
 networks from different domains.
 
 The PANARCHIC project is funded by the Swiss National Science Foundation
-([SNSF](https://p3.snf.ch/Project-188976)). For more information on
-current projects of the Geneva Global Governance Observatory, please see
-[our Github website](https://github.com/globalgov).
+([SNSF](https://data.snf.ch/grants/grant/188976)). For more information
+on current projects of the Geneva Global Governance Observatory, please
+see [our Github website](https://github.com/globalgov).

@@ -9,8 +9,8 @@ Description: Contains a set of tools for constructing and coercing
   date ranges, and sets of dates. 
   This is useful for describing and analysing temporal information,
   whether historical or recent, where date precision may vary.
-Version: 0.4.1
-Date: 2024-04-18
+Version: 0.5.2
+Date: 2025-03-07
 Authors@R: 
     c(person(given = "James",
              family = "Hollway",
@@ -30,18 +30,21 @@ Authors@R:
              role = "ctb"))
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 LazyData: true
-VignetteBuilder: knitr
-Imports: stringr, purrr, lubridate, tibble, dplyr
-Suggests: testthat (>= 3.0.0), covr, rmarkdown, knitr
-Config/testthat/edition: 3
-URL: https://globalgov.github.io/messydates/,
-        https://github.com/globalgov/messydates
-BugReports: https://github.com/globalgov/messydates/issues
 Depends: R (>= 4.0)
+Imports: stringi, purrr, lubridate, dplyr
+Suggests: testthat (>= 3.0.0), rmarkdown
+URL: https://globalgov.github.io/messydates/
+BugReports: https://github.com/globalgov/messydates/issues
+Config/Needs/build: roxygen2, devtools
+Config/Needs/check: covr, lintr, spelling
+Config/Needs/website: pkgdown
+Config/testthat/edition: 3
+Config/testthat/parallel: true
+Config/testthat/start-first: logical-operators
 NeedsCompilation: no
-Packaged: 2024-04-19 07:20:57 UTC; henriquesposito
+Packaged: 2025-03-07 16:39:48 UTC; hollway
 Author: James Hollway [cre, aut, ctb] (IHEID,
     <https://orcid.org/0000-0002-8361-9647>),
   Henrique Sposito [ctb] (IHEID, <https://orcid.org/0000-0003-3420-6085>),
@@ -49,4 +52,4 @@ Author: James Hollway [cre, aut, ctb] (IHEID,
   Nathan Werth [ctb]
 Maintainer: James Hollway <james.hollway@graduateinstitute.ch>
 Repository: CRAN
-Date/Publication: 2024-04-19 07:52:36 UTC
+Date/Publication: 2025-03-07 17:40:02 UTC
