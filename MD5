@@ -1,7 +1,7 @@
-345de88cd8485a7f43331a9925118660 *DESCRIPTION
+721cbe0d44cc59e23b60bd04cc055576 *DESCRIPTION
 b95f4c84f5f2638ba6668835fae270fd *LICENSE
-85420ce22a76b2d701a62980adc13d45 *NAMESPACE
-ae7e924560eb4e8352b9ef3662bd770f *NEWS.md
+d77090a367136acff82781d8b742526f *NAMESPACE
+14d163648e1a107012e825c7f5bee6a3 *NEWS.md
 ace50ef45500191cf30c12310533bb46 *R/class_duration.R
 8c666080f98620d086f6e140136840bc *R/class_mdate.R
 fefbb6cc6ce330133cacd9d707dad6e8 *R/class_methods.R
@@ -10,7 +10,7 @@ fefbb6cc6ce330133cacd9d707dad6e8 *R/class_methods.R
 6ce38524c2915b484fe3824d0d2b7f60 *R/coerce_tendency.R
 c237433680692e725e8c4ecd6cb536fa *R/coerce_to_messydate.R
 70b7bcac49f973fa0e78deff5178f389 *R/component_annotate.R
-0c57b7d2143d2e6401052658aa35eebe *R/component_extract.R
+b35cfbecf8b83eb358659e32287a4aea *R/component_extract.R
 d0518c891bf0a713415b62031a796052 *R/convert_contract.R
 2f7cb77f967e508a04efd8cdcae807de *R/convert_expand.R
 55e1011c2d30bfcc0457b6e590189801 *R/convert_sequence.R
@@ -35,7 +35,7 @@ d0e4047844e0cca8f2898a82cd63cb44 *man/class_make.Rd
 088252d4245e0a869521bf72a134fd22 *man/coerce_tendency.Rd
 03796ca6515f93d1ff6fe62c315cfb97 *man/coerce_to.Rd
 70d2ebcd55684794547bf8ace13fc52b *man/component_annotate.Rd
-be25d90b753ea565a79ae7d46ec5845a *man/component_extract.Rd
+943623085cdeb06a45622e4d55c935e5 *man/component_extract.Rd
 1566456259763f9484e1dba40d3ece6a *man/convert_contract.Rd
 8efc28940cb2e61b4c5d30cd2846aea9 *man/convert_expand.Rd
 9f2e56ef2ad88e0f791315d50ecf5dfa *man/convert_sequence.Rd
@@ -55,7 +55,7 @@ c143e6b2baf478a7758ad0e622b0261b *tests/testthat/test-coerce_from.R
 52c8681af483a7656fc57f47b01a55d2 *tests/testthat/test-coerce_resolve.R
 adc41c68f7be75c5c19310fc9626ae62 *tests/testthat/test-coerce_to.R
 842c80a74c60e475dc2dafcd8c590efb *tests/testthat/test-component_annotate.R
-7cf86b0f554ecd748dedc4e924ad8911 *tests/testthat/test-component_extract.R
+953874beb8a01e6eb00d4ffeb02a3136 *tests/testthat/test-component_extract.R
 34ebeeb3a46a4ac625122e88fe088f88 *tests/testthat/test-convert_contract.R
 99fffc1eac1e80fe1f213ca990df2bcc *tests/testthat/test-convert_expand.R
 f8da3a3a36286346ce3589d1e0b538f0 *tests/testthat/test-operate_arithmetic.R
