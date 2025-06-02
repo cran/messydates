@@ -9,8 +9,8 @@ Description: Contains a set of tools for constructing and coercing
   date ranges, and sets of dates. 
   This is useful for describing and analysing temporal information,
   whether historical or recent, where date precision may vary.
-Version: 0.5.3
-Date: 2025-03-18
+Version: 0.5.4
+Date: 2025-06-02
 Authors@R: 
     c(person(given = "James",
              family = "Hollway",
@@ -44,12 +44,13 @@ Config/testthat/edition: 3
 Config/testthat/parallel: true
 Config/testthat/start-first: logical-operators
 NeedsCompilation: no
-Packaged: 2025-03-20 13:29:41 UTC; hollway
-Author: James Hollway [cre, aut, ctb] (IHEID,
+Packaged: 2025-06-02 13:40:19 UTC; hollway
+Author: James Hollway [cre, aut, ctb] (IHEID, ORCID:
     <https://orcid.org/0000-0002-8361-9647>),
-  Henrique Sposito [ctb] (IHEID, <https://orcid.org/0000-0003-3420-6085>),
-  Jael Tan [ctb] (IHEID, <https://orcid.org/0000-0002-6234-9764>),
+  Henrique Sposito [ctb] (IHEID, ORCID:
+    <https://orcid.org/0000-0003-3420-6085>),
+  Jael Tan [ctb] (IHEID, ORCID: <https://orcid.org/0000-0002-6234-9764>),
   Nathan Werth [ctb]
 Maintainer: James Hollway <james.hollway@graduateinstitute.ch>
 Repository: CRAN
-Date/Publication: 2025-03-20 13:50:05 UTC
+Date/Publication: 2025-06-02 14:20:02 UTC
